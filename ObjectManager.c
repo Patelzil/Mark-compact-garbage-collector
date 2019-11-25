@@ -14,14 +14,14 @@
 #include <assert.h>
 #include "ObjectManager.h"
 
-static int memID = 0;
+static ulong memID = 0;
 
 typedef struct CONTENT
 {
-    int start;
-    int size;
+    ulong start;
+    ulong size;
     int reference;
-    int id;
+    ulong id;
 } Content;
 
 typedef struct NODE Node;
@@ -63,7 +63,7 @@ Ref insertObject( ulong size )
 
     if(current->content.start + size > MEMORY_SIZE)
     {
-        result = 0;
+        result = NULL_REF;
     }
     else
     {
@@ -136,7 +136,18 @@ void initPool()
 // clean up the object manager (before exiting)
 void destroyPool()
 {
+    // go through the index and free up the entire index
+    Node *current = top;
+    Node *temp;
 
+    while (current != NULL)
+    {
+        temp = current->next;
+        free(current);
+        current = temp;
+    }
+
+    top = NULL;
 }// end destroyPool
 
 /*
@@ -147,6 +158,14 @@ void destroyPool()
  */
 void dumpPool()
 {
+    Node *current = top;
+
+    while (current->next != NULL)
+    {
+        printf("\nReference id: %lu, Starting address: %lu, Size(bytes): %lu",
+                current->content.id, current->content.start, current->content.size);
+        current = current->next;
+    }
 
 }// end dumpPool
 
