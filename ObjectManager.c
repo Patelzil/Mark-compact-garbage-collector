@@ -170,10 +170,26 @@ void dumpPool()
 }// end dumpPool
 
 /*
+ * totalObjects
+ *
  * This function traverses the index as it calculates the total
  * number of objects that exist
  */
 int totalObjects()
+{
+    Node *current = top;
+    int numNodes = 0;
+
+    while (current->next != NULL)
+    {
+        numNodes++;
+        current = current->next;
+    }
+
+    return numNodes;
+}
+
+void compact()
 {
 
 }
