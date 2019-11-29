@@ -35,6 +35,10 @@ Node *top;
 
 uchar *buffer;
 
+//////////////// Prototype ////////////
+void compact();
+void deleteNodes();
+
 /*
  * Note that we provide our entire interface via this object module
  * and completely hide our index (see course notes). This allows us to
@@ -64,6 +68,7 @@ Ref insertObject( ulong size )
     if(current->content.start + size > MEMORY_SIZE)
     {
         result = NULL_REF;
+        compact();
     }
     else
     {
@@ -187,9 +192,48 @@ int totalObjects()
     }
 
     return numNodes;
-}
+}// end totalObjects
 
+/*
+ * compact
+ *
+ * This function
+ *
+ */
 void compact()
 {
+    deleteNodes();
+}// end compact
 
-}
+/*
+ * deleteNodes
+ *
+ * This function deletes nodes with 0 reference from the index
+ *
+ */
+void deleteNodes()
+{
+    Node *current = top;
+    Node *prev = NULL;
+
+    while (current != NULL)
+    {
+        if(current->content.reference == 0)
+        {
+            if (prev == NULL)
+            {
+                top = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+                current = current->next;
+            }
+        }
+        else
+        {
+            prev = current;
+            current = current->next;
+        }
+    }
+}// end deleteNodes
