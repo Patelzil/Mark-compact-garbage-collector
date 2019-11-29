@@ -58,7 +58,7 @@ Ref insertObject( ulong size )
 
     Node *current = top;
     Node *newNode;
-    int result;
+    Ref result;
 
     while (current->next != NULL)
     {
@@ -83,12 +83,19 @@ Ref insertObject( ulong size )
         }
 
         newNode->content.size = size;
+        assert(newNode->content.size == size);
+
         newNode->content.reference = 1;
+        assert(newNode->content.reference == 1);
+
         newNode->content.id = memID++;
         newNode->next = NULL;
         current->next = newNode;
+
         result = newNode->content.id;
+        assert(result >= 1);
     }
+
 
     return result;
 }// end insertObject
@@ -135,6 +142,7 @@ void dropReference( Ref ref )
 void initPool()
 {
     buffer = malloc(MEMORY_SIZE);
+    assert(buffer != NULL);
     top = NULL;
 }// initPool
 
@@ -153,6 +161,9 @@ void destroyPool()
     }
 
     top = NULL;
+    assert(top == NULL);
+    free(buffer);
+    assert(buffer == NULL);
 }// end destroyPool
 
 /*
